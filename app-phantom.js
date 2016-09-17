@@ -17,10 +17,3 @@ certificateController(app);
 //listen to port
 app.listen(3000);
 console.log('Listening to the port 3000');
-
-var url2pdf = require("url2pdf");
-
-url2pdf.renderPdf('https://www.npmjs.com/package/url2pdf')
-    .then(function(path){
-        console.log('Rendered pdf @', path);
-    });
