@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/public/assets/styles.css">
+    <title>To-do List</title>
+</head>
+<body>
+
+    <h1>My todo list made with Node.js</h1>
+    <div id="todo-table">
+
+        <form id="add-item" method="POST" action="/contact">
+            <input type="text" name="item" placeholder="Add new item.." required>
+            <button type="submit">+ Add </button>
+        </form>
+
+        <ul>
+            <% data.forEach(function(el) { %>
+
+                <li><%= el.item %></li>
+
+            <% }) %>
+        </ul>
+    </div>
+
+    <script src="/public/assets/todo-list.js"></script>
+</body>
+</html>
