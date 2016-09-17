@@ -6,28 +6,32 @@
     "false"
   ],
   "course": [
+    "WorkFusion Business User",
+    "WorkFusion Developer",
     "WorkFusion RPA Developer",
-    "WorkFusion RPA Developer",
-    "WorkFusion Business User"
+    "WorkFusion Machine Learning Specialist",
+    "WorkFusion Administrator"
   ],
-  "date": "mm/dd/yyyy",
-  "gradeReceived": 55,
-  "gradeMax": 60,
+  "date": "September 2, 2016",
+  "grade": {
+    "received": 55,
+    "max": 60
+  },
   "trainers": [
     {
-      "trainerName": "Andrey",
-      "trainerSurname": "Harhots",
-      "trainerSignatureURL": "https://dropbox.com/wf/signatures/aharhots.png"
+      "name": "Andrey",
+      "surname": "Harhots",
+      "signatureURL": "https://dropbox.com/wf/signatures/aharhots.png"
     },
     {
-      "trainerName": "Sasha",
-      "trainerSurname": "Zinchuk",
-      "trainerSignatureURL": "https://dropbox.com/wf/signatures/azinchuk.png"
+      "name": "Sasha",
+      "surname": "Zinchuk",
+      "signatureURL": "https://dropbox.com/wf/signatures/azinchuk.png"
     },
     {
-      "trainerName": "Jona",
-      "trainerSurname": "Long",
-      "trainerSignatureURL": "https://dropbox.com/wf/signatures/jlong.png"
+      "name": "Jona",
+      "surname": "Long",
+      "signatureURL": "https://dropbox.com/wf/signatures/jlong.png"
     }
   ]
 }
