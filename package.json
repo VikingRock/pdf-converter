@@ -1,0 +1,15 @@
+{
+  "name": "pdf-converter",
+  "version": "1.0.0",
+  "description": "generate certificates from html template to pdf",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Zi",
+  "license": "ISC",
+  "devDependencies": {
+    "html-to-pdf": "^0.1.11",
+    "url2pdf": "^0.4.7"
+  }
+}

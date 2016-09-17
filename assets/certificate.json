@@ -1,0 +1,33 @@
+{
+  "name": "Igor",
+  "surname": "Zhukov",
+  "excellence": [
+    "true",
+    "false"
+  ],
+  "course": [
+    "WorkFusion RPA Developer",
+    "WorkFusion RPA Developer",
+    "WorkFusion Business User"
+  ],
+  "date": "mm/dd/yyyy",
+  "gradeReceived": 55,
+  "gradeMax": 60,
+  "trainers": [
+    {
+      "trainerName": "Andrey",
+      "trainerSurname": "Harhots",
+      "trainerSignatureURL": "https://dropbox.com/wf/signatures/aharhots.png"
+    },
+    {
+      "trainerName": "Sasha",
+      "trainerSurname": "Zinchuk",
+      "trainerSignatureURL": "https://dropbox.com/wf/signatures/azinchuk.png"
+    },
+    {
+      "trainerName": "Jona",
+      "trainerSurname": "Long",
+      "trainerSignatureURL": "https://dropbox.com/wf/signatures/jlong.png"
+    }
+  ]
+}
