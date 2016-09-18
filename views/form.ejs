@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Upload certified people list</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Select Trainers and upload trainees list</h1>
+    </div>
+
+    <form id="certificate" class="form-horizontal" method="POST" action="/certificate">
+
+        <div class="form-group">
+            <label for="company" class="col-sm-2 control-label">Company</label>
+
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="company" placeholder="Virtusa, Wipro, or else" required>
+                <p class="help-block">Certificates will be saved to Dropbox:<br>
+                    Training/Training Assesments/Certificates/${Company name}</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="trainers" class="col-sm-2 control-label">Trainer(s)</label>
+
+            <div class="col-sm-6">
+                <% for (var i = 0; i < data.trainers.length; i++) { %>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="trainers" value="<%= i %>"/>
+                        <%= data.trainers[i].name + ' ' + data.trainers[i].surname %>
+                    </label>
+                </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="date" class="col-sm-2 control-label">Date</label>
+
+            <div class="col-sm-6">
+                <input type="date" class="form-control" name="date" value="<%= today %>" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputFile" class="col-sm-2 control-label">File input</label>
+
+            <div class="col-sm-6">
+                <input type="file" name="inputFile" accept="text/csv" required>
+
+                <p class="help-block">provide a CSV file with trainees name, surname, email, excellence type, grade, and
+                    course name</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">Your Email</label>
+
+            <div class="col-sm-6">
+                <input type="email" class="form-control" name="email" placeholder="my_email@workfusion.com" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="send" class="col-sm-2 control-label">Send emails to trainees</label>
+
+            <div class="col-sm-6">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="sendMailToTrainees" id="optionsRadios1" value="true" checked>
+                        Yep
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="sendMailToTrainees" id="optionsRadios2" value="false">
+                        Nope
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-success btn-lg">Submit</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
