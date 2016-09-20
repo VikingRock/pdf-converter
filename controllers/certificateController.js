@@ -1,11 +1,14 @@
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser'); // TODO: delete this dependency
+var formidable = require('formidable')
 var fs = require('fs');
+var util = require('util');
 var request = require('request');
-var certificate = require('../public/assets/certificate.json');
-var key = fs.readFileSync('./public/assets/drpbx-key.txt', 'utf-8');
 var Converter = require("csvtojson").Converter;
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var certificate = require('../public/assets/certificate.json');
+var key = fs.readFileSync('./public/assets/drpbx-key.txt', 'utf-8');
+
+var urlencodedParser = bodyParser.urlencoded({ extended: false }); // TODO: delete this body-parser
 
 module.exports = function(app) {
 
@@ -28,18 +31,14 @@ module.exports = function(app) {
 
     app.post('/certificate', urlencodedParser, function(req, res) {
         //createDropboxFile();
-        console.log(req.body);
 
-        var body = '';
-        var filePath = __dirname + '/public/data.txt';
-        req.on('data', function(data) {
-            body += data;
-        });
+        var form = new formidable.IncomingForm();
+        form.uploadDir = "./uploads";
 
-        req.on('end', function (){
-            fs.appendFile(filePath, body, function() {
-                res.end();
-            });
+        form.parse(req, function(err, fields, files) {
+            res.writeHead(200, {'content-type': 'text/plain'});
+            res.write('received upload:\n\n');
+            res.end(util.inspect({fields: fields, files: files}));
         });
 
         //var converter = new Converter({});
@@ -47,7 +46,7 @@ module.exports = function(app) {
         //    console.log(result);
         //});
 
-        res.json(req.body);
+        //res.json(req.body);
     });
 
     //var url2pdf = require("url2pdf");

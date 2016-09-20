@@ -13,6 +13,7 @@
     "csvtojson": "^1.0.2",
     "ejs": "^2.5.1",
     "express": "^4.14.0",
+    "formidable": "^1.0.17",
     "request": "^2.74.0",
     "url2pdf": "^0.4.7"
   }
