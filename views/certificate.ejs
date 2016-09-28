@@ -1,0 +1,26 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/public/assets/styles.css">
+    <title>Certificate</title>
+</head>
+<body>
+
+    <h1>Certificate</h1>
+
+    <ul>
+        <% for (el in data) { %>
+            <li><%= data[el] %></li>
+        <% } %>
+    </ul>
+
+    <hr>
+
+    <ul>
+        <% for (el in common) { %>
+        <li><%= common[el] %></li>
+        <% } %>
+    </ul>
+
+</body>
+</html>

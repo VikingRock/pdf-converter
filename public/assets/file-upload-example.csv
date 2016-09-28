@@ -1,0 +1,3 @@
+name, surname, email, excellence_type, grade_received, grade_max, course_name
+Alex, Zi, azinchuk@workfusion.com, true, 59, 60, WorkFusion RPA Developer
+Im, Ho, vikingrock@tut.by, false, 25, 40, WorkFusion Business User

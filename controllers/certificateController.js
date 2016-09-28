@@ -3,17 +3,18 @@ var fs = require('fs');
 var util = require('util');
 var request = require('request');
 var Converter = require("csvtojson").Converter;
+var ejs = require('ejs');
 
 var certificate = require('../public/assets/certificate.json');
 var key = fs.readFileSync('./public/assets/drpbx-key.txt', 'utf-8');
 var pathToCertificateFile; //path where uploaded csv is saved to
 var inputFileName; // csv input file name
-
+var studentsArr = [];
 
 
 module.exports = function(app) {
 
-    var today = function() {
+    var today = function(timestamp) {
         var date = new Date();
 
         var day = date.getDate();
@@ -23,7 +24,16 @@ module.exports = function(app) {
         if (month < 10) month = "0" + month;
         if (day < 10) day = "0" + day;
 
-        return year + "-" + month + "-" + day;
+        if (!timestamp) {
+            return year + "-" + month + "-" + day;
+        } else {
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+
+            return year + "-" + month + "-" + day + '' + hour + minute + second;
+        }
+
     };
 
     app.get('/certificate', function(req, res) {
@@ -37,20 +47,17 @@ module.exports = function(app) {
         form.keepExtensions = true;
 
         form.parse(req, function(err, fields, files) {
+
+            pathToCertificateFile = files.inputFile.path;
+            inputFileName = files.inputFile.name + today(true);
+
+            csvToJson(pathToCertificateFile, fields);
+
             res.writeHead(200, {'content-type': 'text/plain'});
             res.write('received upload:\n\n');
             res.end(util.inspect({fields: fields, files: files}));
-            pathToCertificateFile = files.inputFile.path;
-            inputFileName = files.inputFile.name;
 
-            createDropboxFile(pathToCertificateFile, inputFileName);
         });
-
-
-        //var converter = new Converter({});
-        //converter.fromString(req.body.inputFile, function(err,result){
-        //    console.log(result);
-        //});
 
     });
 
@@ -115,8 +122,25 @@ module.exports = function(app) {
         request.post(options, callback);
     };
 
-    var csvToJson = function(path) {
+    var csvToJson = function(path, formFields) {
 
+        var converter = new Converter({});
+        converter.fromFile(path, function(error, result){
+            studentsArr = JSON.parse(JSON.stringify(result));
+
+            studentsArr.forEach(function(item, index) {
+                fs.readFile('./views/certificate.ejs', 'utf-8', function(err, file) {
+                    var renderedCertificate = ejs.render(file, {data: item, common: formFields});
+                    var timestamp = today(true);
+                    var fileName = './uploads/' + index + timestamp + '.html';
+
+                    fs.writeFile(fileName, renderedCertificate, function(err) {
+                        createDropboxFile(fileName, index + timestamp + '.html');
+                    });
+                });
+            })
+
+        });
     };
 
 };
