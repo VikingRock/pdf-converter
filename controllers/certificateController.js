@@ -3,6 +3,7 @@ var fs = require('fs');
 var util = require('util');
 var request = require('request');
 var Converter = require("csvtojson").Converter;
+var url2pdf = require("url2pdf");
 var ejs = require('ejs');
 
 var certificate = require('../public/assets/certificate.json');
@@ -61,13 +62,13 @@ module.exports = function(app) {
 
     });
 
-    //var url2pdf = require("url2pdf");
-    //
-    //url2pdf.renderPdf('https://www.npmjs.com/package/url2pdf')
-    //    .then(function(path){
-    //        console.log('Rendered pdf @', path);
-    //    });
+    var convertToPdf = function(pathToHtml) {
 
+        url2pdf.renderPdf(pathToHtml, {saveDir: './uploads/pdf'})
+            .then(function(path){
+                console.log('Rendered pdf @', path);
+            });
+    };
 
     var shareDropboxFile = function(path) {
         var options = {
@@ -135,7 +136,8 @@ module.exports = function(app) {
                     var fileName = './uploads/' + index + timestamp + '.html';
 
                     fs.writeFile(fileName, renderedCertificate, function(err) {
-                        createDropboxFile(fileName, index + timestamp + '.html');
+                        convertToPdf(fileName);
+                        //createDropboxFile(fileName, index + timestamp + '.html');
                     });
                 });
             })

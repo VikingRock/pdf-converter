@@ -34,7 +34,8 @@
                 <% for (var i = 0; i < data.trainers.length; i++) { %>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="trainers" value="<%= i %>"/>
+                        <input type="checkbox" name="trainers[]"
+                               value="<%= data.trainers[i].name + ' ' + data.trainers[i].surname %>"/>
                         <%= data.trainers[i].name + ' ' + data.trainers[i].surname %>
                     </label>
                 </div>

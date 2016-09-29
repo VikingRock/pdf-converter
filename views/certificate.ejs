@@ -3,6 +3,11 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/public/assets/styles.css">
     <title>Certificate</title>
+    <style>
+        html {
+            zoom: 0.55; /*workaround for phantomJS2 rendering pages too large*/
+        }
+    </style>
 </head>
 <body>
 
@@ -10,7 +15,7 @@
 
     <ul>
         <% for (el in data) { %>
-            <li><%= data[el] %></li>
+            <li><%= el + ': ' +  data[el] %></li>
         <% } %>
     </ul>
 
@@ -18,7 +23,7 @@
 
     <ul>
         <% for (el in common) { %>
-        <li><%= common[el] %></li>
+            <li><%= el + ': ' + common[el] %></li>
         <% } %>
     </ul>
 
