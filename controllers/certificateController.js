@@ -1,10 +1,11 @@
 var formidable = require('formidable');
-var fs = require('fs');
+var fs = require('fs-extra');
 var util = require('util');
 var request = require('request');
 var Converter = require("csvtojson").Converter;
 var url2pdf = require("url2pdf");
 var ejs = require('ejs');
+var Q = require('q');
 
 var certificate = require('../public/assets/certificate.json');
 var key = fs.readFileSync('./public/assets/drpbx-key.txt', 'utf-8');
@@ -37,30 +38,16 @@ module.exports = function(app) {
 
     };
 
-    app.get('/certificate', function(req, res) {
-        res.render('form', {data: certificate, today: today()});
-    });
+    var deleteTempFiles = function (dir) {
+        var deferred = Q.defer();
 
-    app.post('/certificate', function(req, res) {
-
-        var form = new formidable.IncomingForm();
-        form.uploadDir = "./uploads";
-        form.keepExtensions = true;
-
-        form.parse(req, function(err, fields, files) {
-
-            pathToCertificateFile = files.inputFile.path;
-            inputFileName = files.inputFile.name + today(true);
-
-            csvToJson(pathToCertificateFile, fields);
-
-            res.writeHead(200, {'content-type': 'text/plain'});
-            res.write('received upload:\n\n');
-            res.end(util.inspect({fields: fields, files: files}));
-
+        fs.emptyDir(dir, function (err) {
+            if (!err) console.log('success!');
+            deferred.resolve();
         });
 
-    });
+        return deferred.promise;
+    };
 
     var shareDropboxFile = function(path) {
         var options = {
@@ -125,6 +112,7 @@ module.exports = function(app) {
     };
 
     var csvToJson = function(path, formFields) {
+        var deferred = Q.defer();
 
         var converter = new Converter({});
         converter.fromFile(path, function(error, result){
@@ -139,10 +127,46 @@ module.exports = function(app) {
                     fs.writeFile(fileName, renderedCertificate, function(err) {
                         convertToPdf(fileName, index, timestamp);
                     });
+
+                    deferred.resolve('./uploads');
                 });
-            })
+            });
 
         });
+
+        return deferred.promise;
     };
+
+    app.get('/certificate', function(req, res) {
+        res.render('form', {data: certificate, today: today()});
+    });
+
+    app.post('/certificate', function(req, res) {
+
+        var form = new formidable.IncomingForm();
+        form.uploadDir = "./uploads";
+        form.keepExtensions = true;
+
+        form.parse(req, function(err, fields, files) {
+
+            pathToCertificateFile = files.inputFile.path;
+            inputFileName = files.inputFile.name + today(true);
+
+            csvToJson(pathToCertificateFile, fields)
+                .then(deleteTempFiles)
+                .then(function() {
+                    res.writeHead(200, {'content-type': 'text/plain'});
+                    res.write('received upload:\n\n');
+                    res.end(util.inspect({fields: fields, files: files}));
+                    console.log('Finally: response sent!');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .done();
+
+        });
+
+    });
 
 };
