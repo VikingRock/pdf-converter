@@ -1,5 +1,5 @@
 var formidable = require('formidable');
-var fs = require('fs');
+var fs = require('fs-extra');
 var util = require('util');
 var request = require('request');
 var Converter = require("csvtojson").Converter;
@@ -37,30 +37,12 @@ module.exports = function(app) {
 
     };
 
-    app.get('/certificate', function(req, res) {
-        res.render('form', {data: certificate, today: today()});
-    });
+    var deleteTempFiles = function (dir) {
 
-    app.post('/certificate', function(req, res) {
-
-        var form = new formidable.IncomingForm();
-        form.uploadDir = "./uploads";
-        form.keepExtensions = true;
-
-        form.parse(req, function(err, fields, files) {
-
-            pathToCertificateFile = files.inputFile.path;
-            inputFileName = files.inputFile.name + today(true);
-
-            csvToJson(pathToCertificateFile, fields);
-
-            res.writeHead(200, {'content-type': 'text/plain'});
-            res.write('received upload:\n\n');
-            res.end(util.inspect({fields: fields, files: files}));
-
+        fs.emptyDir(dir, function (err) {
+            if (!err) console.log('deleted successfully!');
         });
-
-    });
+    };
 
     var shareDropboxFile = function(path) {
         var options = {
@@ -144,5 +126,39 @@ module.exports = function(app) {
 
         });
     };
+
+    app.get('/certificate', function(req, res) {
+        res.render('form', {data: certificate, today: today()});
+    });
+
+    app.post('/certificate', function(req, res) {
+
+        var form = new formidable.IncomingForm();
+        form.uploadDir = "./uploads";
+        form.keepExtensions = true;
+
+        form.parse(req, function(err, fields, files) {
+
+            pathToCertificateFile = files.inputFile.path;
+            inputFileName = files.inputFile.name + today(true);
+
+            csvToJson(pathToCertificateFile, fields);
+
+            setTimeout(function() {
+                res.writeHead(200, {'content-type': 'text/plain'});
+                res.write('received upload:\n\n');
+                res.end(util.inspect({fields: fields, files: files}));
+                console.log('---\nresponse sent');
+
+                deleteTempFiles('./uploads');
+            }, 6000);
+
+
+
+        });
+
+    });
+
+
 
 };
