@@ -6,11 +6,20 @@ var Converter = require("csvtojson").Converter;
 var url2pdf = require("url2pdf");
 var ejs = require('ejs');
 
+var email 	= require("emailjs");
+var server 	= email.server.connect({
+    user:    "wiproworker@yandex.ru",
+    password:"Wipro123",
+    host:    "smtp.yandex.com",
+    ssl:     true
+});
+
 var certificate = require('../public/assets/certificate.json');
 var key = fs.readFileSync('./public/assets/drpbx-key.txt', 'utf-8');
 var pathToCertificateFile; //path where uploaded csv is saved to
 var inputFileName; // csv input file name
 var studentsArr = [];
+var sharedLinksArr = [];
 
 
 module.exports = function(app) {
@@ -37,6 +46,26 @@ module.exports = function(app) {
 
     };
 
+    var sendEmail = function() {
+        var emailText = 'Trainees\' certificates:\n';
+
+        studentsArr.forEach(function(item, index) {
+            emailText += item.name + ' ' + item.surname + ' ' + item.email + ' -  ' + sharedLinksArr[index] + '\n';
+        });
+
+
+        server.send({
+            text:    emailText,
+            from:    "wiproworker@yandex.ru",
+            to:      "a.zinchuk.a@gmail.com",
+            subject: "WF ceftificate links"
+        }, function(err) {
+            if (!err) {
+                console.log('email sent');
+            }
+        });
+    };
+
     var deleteTempFiles = function (dir) {
 
         fs.emptyDir(dir, function (err) {
@@ -58,6 +87,7 @@ module.exports = function(app) {
             var info = JSON.parse(body);
             if (!error && response.statusCode == 200) {
                 console.log('Shared URL: ' + info.url);
+                sharedLinksArr.push(info.url);
             } else {
                 console.log(info.error_summary);
             }
@@ -133,6 +163,9 @@ module.exports = function(app) {
 
     app.post('/certificate', function(req, res) {
 
+        studentsArr = [];
+        sharedLinksArr = [];
+
         var form = new formidable.IncomingForm();
         form.uploadDir = "./uploads";
         form.keepExtensions = true;
@@ -151,14 +184,11 @@ module.exports = function(app) {
                 console.log('---\nresponse sent');
 
                 deleteTempFiles('./uploads');
-            }, 6000);
-
-
+                sendEmail();
+            }, 7000);
 
         });
 
     });
-
-
 
 };
