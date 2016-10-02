@@ -62,14 +62,6 @@ module.exports = function(app) {
 
     });
 
-    var convertToPdf = function(pathToHtml) {
-
-        url2pdf.renderPdf(pathToHtml, {saveDir: './uploads/pdf'})
-            .then(function(path){
-                console.log('Rendered pdf @', path);
-            });
-    };
-
     var shareDropboxFile = function(path) {
         var options = {
             url: 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings',
@@ -93,7 +85,7 @@ module.exports = function(app) {
     };
 
     var createDropboxFile = function(path, name) {
-        var myStream = fs.createReadStream('./' + path, 'utf8');
+        var myStream = fs.createReadStream(path);
 
         var options = {
             url: 'https://content.dropboxapi.com/2/files/upload',
@@ -123,6 +115,15 @@ module.exports = function(app) {
         request.post(options, callback);
     };
 
+    var convertToPdf = function(pathToHtml, index, timestamp) {
+
+        url2pdf.renderPdf(pathToHtml, {saveDir: './uploads/pdf'})
+            .then(function(path){
+                console.log('Rendered pdf @', path);
+                createDropboxFile(path, index + timestamp + '.pdf');
+            });
+    };
+
     var csvToJson = function(path, formFields) {
 
         var converter = new Converter({});
@@ -136,8 +137,7 @@ module.exports = function(app) {
                     var fileName = './uploads/' + index + timestamp + '.html';
 
                     fs.writeFile(fileName, renderedCertificate, function(err) {
-                        convertToPdf(fileName);
-                        //createDropboxFile(fileName, index + timestamp + '.html');
+                        convertToPdf(fileName, index, timestamp);
                     });
                 });
             })
