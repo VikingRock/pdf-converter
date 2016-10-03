@@ -1,6 +1,5 @@
 var formidable = require('formidable');
 var fs = require('fs-extra');
-var util = require('util');
 var request = require('request');
 var Converter = require("csvtojson").Converter;
 var url2pdf = require("url2pdf");
@@ -18,7 +17,7 @@ var certificate = require('../public/assets/certificate.json');
 var key = fs.readFileSync('./public/assets/drpbx-key.txt', 'utf-8');
 var pathToCertificateFile; //path where uploaded csv is saved to
 var inputFileName; // csv input file name
-var destinationFolder = '/Training/Training Assesments/Certificates'; //where to save certificates in Dropbox
+var destinationFolder = '/Training/Training Assessments/Certificates'; //where to save certificates in Dropbox
 var studentsArr;
 var sharedLinksArr;
 

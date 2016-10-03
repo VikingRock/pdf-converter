@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/public/assets/styles.css">
+    <link rel="stylesheet" href="assets/styles.css">
     <title>Certificate</title>
     <style>
         html {
@@ -11,21 +11,18 @@
 </head>
 <body>
 
-    <h1>Certificate</h1>
+    <img src="http://localhost:3000/assets/workfusion-logo.svg">
 
-    <ul>
-        <% for (el in data) { %>
-            <li><%= el + ': ' +  data[el] %></li>
-        <% } %>
-    </ul>
-
-    <hr>
-
-    <ul>
-        <% for (el in common) { %>
-            <li><%= el + ': ' + common[el] %></li>
-        <% } %>
-    </ul>
+    <div class="certificate">CERTIFICATE of ACHIEVEMENT</div>
+    <div class="text">
+        <p class="regular">This is to certify that</p>
+        <p class="name"><%=data.name%> <%=data.surname%></p>
+        <p class="regular">has successfully completed the course <span class="excellence">with <span class="outstanding">excellence</span></span></p>
+        <p class="course"><%=data.course_name%></p>
+    </div>
+    <div class="date">Date: <%=common.date%></div>
+    <div class="grade">Grade: <%=data.grade_received%> / <%=data.grade_max%></div>
+    <div class="trainers">Trainers: <%=common.trainers%></div>
 
 </body>
 </html>
